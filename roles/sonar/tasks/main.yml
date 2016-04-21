@@ -1,0 +1,14 @@
+---
+#- include: nginx.yml
+#  tags: [webserver_dependencies]
+  
+#- include: java8.yml
+#  tags: [webserver_dependencies]
+
+- include: java8.yml
+#  tags: [webserver_dependencies]
+
+- include: postgres.yml
+ # tags: [webserver_apps]
+
+- include: sonar.yml

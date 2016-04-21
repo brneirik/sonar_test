@@ -1,0 +1,21 @@
+---
+
+- name: Don't use default repo for postgres
+  lineinfile: dest="/etc/yum.repos.d/CentOS-Base.repo" state=present line="exclude=postgresql*"
+
+- name: Add postgres yum repo
+  yum: name="http://yum.postgresql.org/9.4/redhat/rhel-6-x86_64/pgdg-centos94-9.4-1.noarch.rpm" state=present
+
+- name: Ensure Postgresql installed
+  yum: name="postgresql94-server" state=installed
+
+- name: Postgres initdb
+  command: /usr/pgsql-9.4/bin/postgresql94-setup initdb creates=/var/lib/pgsql/9.4/data/postgresql.conf
+
+- name: Change auth method to passwd
+  lineinfile: dest="/var/lib/pgsql/9.4/data/pg_hba.conf" regexp="host    all             all             127.0.0.1/32            ident" line="host    all             all             127.0.0.1/32            md5"
+  #lineinfile: dest="/var/lib/pgsql/9.4/data/ph_hba.conf" regexp='host    all             all             127.0.0.1/32            ident' line = "host    all             all             127.0.0.1/32            md5"
+  
+- name: Enable and start postgres service
+  service: name=postgresql-9.4 enabled=yes state=restarted
+

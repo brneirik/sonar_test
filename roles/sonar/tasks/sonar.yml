@@ -1,0 +1,63 @@
+---
+
+- name: Create database for Sonar
+  sudo: yes
+  sudo_user: postgres
+  postgresql_db: name=sonar
+ 
+- name: Create db user for Sonar
+  sudo: yes
+  sudo_user: postgres
+  postgresql_user: name=sonar password=sonar role_attr_flags=LOGIN
+
+- name: Grant connect to db
+  sudo: yes
+  sudo_user: postgres
+  postgresql_privs: db=sonar
+    privs=CONNECT
+    type=database
+    role=sonar
+
+- name: Grant all on schema public
+  sudo: yes
+  sudo_user: postgres
+  postgresql_privs: database=sonar 
+    privs=ALL
+    type=schema
+    objs=public
+    role=sonar
+
+- name: Grant all on all tables on schema public
+  sudo: yes
+  sudo_user: postgres
+  postgresql_privs: database=sonar
+    privs=ALL
+    type=table
+    objs=ALL_IN_SCHEMA
+    role=sonar
+
+
+- name: "Check if sonar exists"
+  stat: path="/opt/sonar/conf/sonar.properties"
+  register: result
+
+- name: Download Sonar
+  get_url: dest=/tmp/sonar.zip  url="https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-4.5.7.zip"
+  when: (not result.stat.exists)
+
+- name: Unpack sources
+  unarchive: src="/tmp/sonar.zip" dest="/tmp"  copy=no
+  when: (not result.stat.exists)
+
+- name: Move to opt
+  command: "mv /tmp/sonarqube-4.5.7/ /opt/sonar"
+  when: (not result.stat.exists)
+
+- name: Transfer nginx proxy config files
+  copy: src="{{item}}" dest="/opt/sonar/conf/sonar.properties" owner="root" group="root" mode="0644" backup=yes
+  with_items:
+    - "sonar.properties"
+  register: result 
+
+- name: Start sonar
+  command: /opt/sonar/bin/linux-x86-64/sonar.sh restart
