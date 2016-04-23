@@ -2,6 +2,7 @@
 
 - name: Don't use default repo for postgres
   lineinfile: dest="/etc/yum.repos.d/CentOS-Base.repo" state=present line="exclude=postgresql*"
+  when: ansible_distribution == 'CentOS'
 
 - name: Add postgres yum repo
   yum: name="http://yum.postgresql.org/9.4/redhat/rhel-6-x86_64/pgdg-centos94-9.4-1.noarch.rpm" state=present
