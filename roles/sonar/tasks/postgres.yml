@@ -16,7 +16,18 @@
 - name: Change auth method to passwd
   lineinfile: dest="/var/lib/pgsql/9.4/data/pg_hba.conf" regexp="host    all             all             127.0.0.1/32            ident" line="host    all             all             127.0.0.1/32            md5"
   #lineinfile: dest="/var/lib/pgsql/9.4/data/ph_hba.conf" regexp='host    all             all             127.0.0.1/32            ident' line = "host    all             all             127.0.0.1/32            md5"
-  
+
+- name: Change auth method to passwd
+  lineinfile: dest="/var/lib/pgsql/9.4/data/pg_hba.conf" line="host    all             all             {{jenkins_host}}            md5"
+
+- name: Change auth method to passwd
+  lineinfile: dest="/var/lib/pgsql/9.4/data/pg_hba.conf" line="host    all             all             {{other_hosts}}            md5"
+
+- name: Change liste addr to all
+  lineinfile: dest="/var/lib/pgsql/9.4/data/pg_hba.conf" line="listen_addresses = '*'"
+
+
+
 - name: Enable and start postgres service
   service: name=postgresql-9.4 enabled=yes state=restarted
 
