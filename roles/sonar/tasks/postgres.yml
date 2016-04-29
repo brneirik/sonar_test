@@ -6,6 +6,11 @@
 
 - name: Add postgres yum repo
   yum: name="http://yum.postgresql.org/9.4/redhat/rhel-6-x86_64/pgdg-centos94-9.4-1.noarch.rpm" state=present
+  when: ansible_distribution == 'CentOS'
+
+- name: Add postgres yum repo
+  yum: name="http://yum.postgresql.org/9.4/redhat/rhel-6-x86_64/pgdg-redhat94-9.4-1.noarch.rpm" state=present
+  when: ansible_distribution == ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Ensure Postgresql installed
   yum: name="postgresql94-server" state=installed
