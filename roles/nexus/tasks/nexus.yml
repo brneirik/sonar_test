@@ -3,11 +3,18 @@
   get_url: dest="{{nexus_download_dir}}/nexus.zip" url="http://download.sonatype.com/nexus/3/nexus-3.0.0-03-unix.tar.gz"
 
 - name: Unpack sources
-  unarchive: src="{{nexus_download_dir}}/sonar.zip" dest={{nexus_install_dir}}/nexus-3.0.0-03-unix copy=no
+  unarchive: src="{{nexus_download_dir}}/nexus.zip" dest=/usr/local copy=no#{{nexus_install_dir}} copy=no
   #when: (not result.stat.exists)
 
 - name: Symlink to /usr/local/nexus
-  file: state=link src=nexus-3.0.0-03-unix dest=/nexus
+  file: state=link src={{nexus_install_dir}}nexus-3.0.0-03 dest={{nexus_install_dir}}nexus
+
+- name: Transfer nexus properties file
+  copy: src="{{item}}" dest="/usr/local/nexus/etc/org.sonatype.nexus.cfg" owner="root" group="root" mode="0644" backup=yes
+  with_items:
+    - "org.sonatype.nexus.cfg"
 
 - name: Start nexus
   command: /usr/local/nexus/./bin/nexus restart
+  environment: 
+    INSTALL4J_JAVA_HOME: /usr/lib/jvm/jre-1.7.0-openjdk
