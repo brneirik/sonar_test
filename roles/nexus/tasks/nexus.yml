@@ -1,4 +1,13 @@
 ---
 - name: Download nexus
-  get_url: dest={{nexus_download_dir}} url=http://download.sonatype.com/nexus/3/nexus-3.0.0-03-unix.tar.gz
+  get_url: dest="{{nexus_download_dir}}/nexus.zip" url="http://download.sonatype.com/nexus/3/nexus-3.0.0-03-unix.tar.gz"
 
+- name: Unpack sources
+  unarchive: src="{{nexus_download_dir}}/sonar.zip" dest={{nexus_install_dir}}/nexus-3.0.0-03-unix copy=no
+  #when: (not result.stat.exists)
+
+- name: Symlink to /usr/local/nexus
+  file: state=link src=nexus-3.0.0-03-unix dest=/nexus
+
+- name: Start nexus
+  command: /usr/local/nexus/./bin/nexus restart
