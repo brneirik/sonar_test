@@ -5,7 +5,7 @@
 #- include: java8.yml
 #  tags: [webserver_dependencies]
 
-- include: java8.yml
+#- include: java8.yml
 #  tags: [webserver_dependencies]
 
 - include: postgres.yml
