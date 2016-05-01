@@ -1,0 +1,4 @@
+---
+
+name: Download nexus
+get_url: dest={{nexus_download_dir}} url=http://download.sonatype.com/nexus/3/nexus-3.0.0-03-unix.tar.gz

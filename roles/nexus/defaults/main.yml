@@ -1,0 +1,3 @@
+---
+#tomcat_url: "http://apache.vianett.no/tomcat/tomcat-6/v6.0.43/bin/apache-tomcat-6.0.43.tar.gz"
+nexus_download_dir: "/tmp"

@@ -29,7 +29,7 @@
   lineinfile: dest="/var/lib/pgsql/9.4/data/pg_hba.conf" line="host    all             all             {{other_hosts}}            md5"
 
 - name: Change liste addr to all
-  lineinfile: dest="/var/lib/pgsql/9.4/data/postgres.conf" line="listen_addresses = '*'"
+  lineinfile: dest="/var/lib/pgsql/9.4/data/postgres.conf" line="listen_addresses= \'*\' "
 
 
 
